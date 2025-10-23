@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from interfaces import app_interfaces as interfaces
 
 COLUNAS_ESPERADAS = [
@@ -46,34 +46,25 @@ reminder_cache = []
 def initialize_cache():
     """Carrega todos os lembretes existentes no calendário para o cache."""
     global reminder_cache
-    reminder_cache = interfaces.reminders.get(folder_type="calendar")
+    start_date = datetime.now() - timedelta(days=365)
+    end_date = datetime.now() + timedelta(days=365)
+    reminder_cache = interfaces.reminders.get(folder_type="calendar", start_date=start_date, end_date=end_date)
     print(f"🗂️ {len(reminder_cache)} lembretes carregados no cache.")
 
-def find_existing_reminder(body_lines):
+def find_existing_reminder(subject):
     """Procura no cache um lembrete com o mesmo patrimônio e descrição detalhada (ou corpo idêntico)."""
-    # Garante que body_lines seja sempre uma string única para comparar corretamente
-    if isinstance(body_lines, list):
-        body_joined = "\n".join(line.strip() for line in body_lines if line.strip())
-    else:
-        body_joined = str(body_lines).strip()
-
     for reminder in reminder_cache:
-        subject = reminder.get("subject", "")
-        body = reminder.get("body", "").strip()
-
-        # Normaliza quebras de linha e espaços
-        body_normalized = "\n".join(line.strip() for line in body.splitlines() if line.strip())
-
-        # Comparações
-        match_body = body_normalized == body_joined
-        if match_body:
+        subject_reminder = reminder.get("subject", "")
+        match_subject = subject_reminder.strip().lower() == subject.strip().lower()
+       
+        if match_subject:
             return reminder
 
     return None
 
 def create_contract_reminder(contract: dict):
     due_date = contract.get("due_date")
-    n_sienge = contract.get("contract_number_sienge")
+    n_sienge = contract.get("contract_number_sienge", False)
 
     if not due_date:
         print("⚠️ Contrato sem data de vencimento — lembrete não criado.")
@@ -85,7 +76,14 @@ def create_contract_reminder(contract: dict):
     start_reminder = due_date - timedelta(days=15)
     end_reminder = due_date
     subject = f"Vencimento: {n_sienge}"
-
+    
+    # Verifica cache
+    existing = find_existing_reminder(subject)
+    
+    if existing:
+        print(f"⏩ Lembrete existente sem alterações para {n_sienge} — ignorado.")
+        return False
+    
     # Monta corpo do lembrete
     body_lines = []
     for key, value in contract.items():
@@ -93,15 +91,6 @@ def create_contract_reminder(contract: dict):
             field_label = FIELD_TRANSLATIONS.get(key, key.replace("_", " ").capitalize())
             body_lines.append(f"{field_label}: {value}")
     body = "\n".join(body_lines)
-    
-    # Verifica cache
-    existing = find_existing_reminder(body_lines)
-    
-    if existing:
-        print(f"⏩ Lembrete existente sem alterações para {n_sienge} — ignorado.")
-        return False
-
-    return
 
     # Cria o lembrete
     result = interfaces.reminders.create(
