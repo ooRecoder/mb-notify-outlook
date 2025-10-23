@@ -2,4 +2,5 @@
 /venv
 /Documentos
 /__pycache__
+*.cpython-313
 *.pyc
