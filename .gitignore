@@ -1,6 +1,101 @@
-/.vscode
-/venv
-/Documentos
-/__pycache__
-*.cpython-313
-*.pyc
+# ==============================
+# 🐍 Arquivo .gitignore para Python
+# ==============================
+
+# --- Compilação do Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Ambientes virtuais ---
+venv/
+.env/
+.venv/
+env/
+ENV/
+env.bak/
+pip-wheel-metadata/
+
+# --- Dependências locais ---
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+sdist/
+develop-eggs/
+.installed.cfg
+
+# --- PyInstaller ---
+# (Arquivos gerados durante o build do executável)
+*.spec
+*.manifest
+*.dll
+*.pyd
+*.exe
+*.so
+*.pkg
+*.dmg
+*.app
+output/
+# PyInstaller cria as pastas abaixo:
+build/
+dist/
+
+# --- Logs e relatórios ---
+*.log
+*.pot
+*.mo
+*.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.tox/
+.pytest_cache/
+
+# --- IDEs e editores ---
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+
+# --- Configurações do sistema ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Jupyter Notebook ---
+.ipynb_checkpoints
+
+# --- Arquivos temporários ---
+*.tmp
+*.bak
+*.swp
+*~
+tmp/
+temp/
+
+# --- Arquivos pessoais ou sensíveis ---
+# (adapte conforme seu projeto)
+credentials.json
+secrets.json
+config.ini
+.env.local
+
+# --- Ferramentas de documentação ---
+docs/_build/
+site/
+
+# --- Arquivos de testes ---
+test_output/
+.junit/
+
+# --- Arquivos do PyInstaller customizados ---
+# Se você quiser guardar o executável, remova as linhas de dist/ e build/ acima.
+# dist/LimparLembretes.exe
