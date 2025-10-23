@@ -1,1 +1,1 @@
-from . import read, control
+from . import control_spreadsheet_service as control, read_spreadsheet_service as read
