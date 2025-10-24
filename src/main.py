@@ -102,6 +102,11 @@ def create_contract_reminder(contract: dict):
         reminder_minutes_before=15 * 24 * 60,
         reminder_set=True,
         categories="Contratos",
+        recurrence={
+            "type": "monthly",
+            "interval": 1,
+            "count": 3,
+        },
         is_all_day=True
     )
 
@@ -118,34 +123,34 @@ def create_contract_reminder(contract: dict):
 
 
 if __name__ == "__main__":
-    interfaces.reminders.delete(folder_type="calendar")
+    # interfaces.reminders.delete(folder_type="calendar")
     
-    # path = interfaces.popup.choose_path()
-    # if path:
-    #     sheet = interfaces.spreadsheet.read_xlsx(
-    #         path=path,
-    #         columns=COLUNAS_ESPERADAS,
-    #         skip_rows=1,
-    #         sheet_name="OUTUBRO - 2025"
-    #     )
-    #     print("✅ Planilha carregada com sucesso!")
+    path = interfaces.popup.choose_path()
+    if path:
+        sheet = interfaces.spreadsheet.read_xlsx(
+            path=path,
+            columns=COLUNAS_ESPERADAS,
+            skip_rows=1,
+            sheet_name="OUTUBRO - 2025"
+        )
+        print("✅ Planilha carregada com sucesso!")
 
-    #     contracts = interfaces.spreadsheet.listar_contratos(sheet, columns=COLUNAS_ESPERADAS)
+        contracts = interfaces.spreadsheet.listar_contratos(sheet, columns=COLUNAS_ESPERADAS)
 
-    #     if contracts:
-    #         filtered_contracts = interfaces.spreadsheet.filter(contracts)
-    #         print(f"🔍 {len(filtered_contracts)} contratos encontrados após o filtro.")
-    #         print("🚀 Inicializando cache e criação de lembretes...\n")
+        if contracts:
+            filtered_contracts = interfaces.spreadsheet.filter(contracts)
+            print(f"🔍 {len(filtered_contracts)} contratos encontrados após o filtro.")
+            print("🚀 Inicializando cache e criação de lembretes...\n")
 
-    #         initialize_cache()
+            initialize_cache()
 
-    #         for i, contract in enumerate(filtered_contracts, start=1):
-    #             desc = contract.get("description_detail") or contract.get("description") or "Sem descrição"
-    #             print(f"[{i}/{len(filtered_contracts)}] Processando: {desc}")
-    #             create_contract_reminder(contract)
+            for i, contract in enumerate(filtered_contracts, start=1):
+                desc = contract.get("description_detail") or contract.get("description") or "Sem descrição"
+                print(f"[{i}/{len(filtered_contracts)}] Processando: {desc}")
+                create_contract_reminder(contract)
 
-    #         print("\n✅ Todos os lembretes foram processados!")
-    #     else:
-    #         print("⚠️ Nenhum contrato encontrado na planilha.")
-    # else:
-    #     print("❌ Nenhum arquivo foi selecionado.")
+            print("\n✅ Todos os lembretes foram processados!")
+        else:
+            print("⚠️ Nenhum contrato encontrado na planilha.")
+    else:
+        print("❌ Nenhum arquivo foi selecionado.")

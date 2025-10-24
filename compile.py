@@ -22,7 +22,7 @@ def compilar():
     comando = [
         sys.executable, "-m", "PyInstaller",
         "--onefile",
-        "--name", "LimparLembretes",
+        "--name", "CriarLembretes (BETA)",
         "--hidden-import=pandas",
         "--hidden-import=numpy",
         "--hidden-import=openpyxl",
